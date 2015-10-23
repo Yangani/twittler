@@ -11,35 +11,90 @@
 
 <body>
     <header>
-        <span>Twittler</span>
-    <br>
-    <ul>
-        <li><a href="https://www.linkedin.com/in/yanganif">Home</a></li>
-        <li><a href="http://yangani.github.io/github.io/">Notifications</a></li>
-        <li><a href="https://github.com/Yangani">Portfolio</a></li>
-        <li><a href="https://dash.generalassemb.ly/yanganif/build-your-own-personal-website">tweet</a></li>
-    </ul>
+        <h1>Twittler</h1>
     </header>
-    
-    <div>
-        
-    </div>
-    <script>
-    $(document).ready(function() {
-        var $body = $('div');
-        $body.html('');
 
-        var index = streams.home.length - 1;
-        while (index >= 0) {
-            var tweet = streams.home[index];
-            var $tweet = $('<div></div>');
-            $tweet.text('@' + tweet.user + ': ' + tweet.message);
-            $tweet.appendTo($body);
-            index -= 1;
+    <div>
+        <script>
+        var $tweets = $('div');
+        $tweets.html('');
+        var index;
+        var retainIndex;
+        var newTweetsInterval;
+        var individual = false;
+
+        var originalTweets = function() {
+
+            index = streams.home.length - 1;
+            retainIndex = index;
+
+            for (var i = 0; i < index; i++) {
+                appendingTweet(i);
+            }
         }
 
-    });
-    </script>
+
+        var appendingTweet = function(i) {
+            var tweet = streams.home[i];
+            var $tweet = $("<div class='div-" + tweet.user + "'></div>");
+            $tweet.html("<strong class='" + tweet.user + "'>@" + tweet.user + '</strong>: ' + tweet.message + '<br />' + tweet.created_at);
+            $tweet.appendTo($tweets);
+        }
+
+
+        var newTweets = function() {
+            newTweetsInterval = setInterval(function() {
+                for (var i = retainIndex + 1; i < streams.home.length - 1; i++) {
+                    appendingTweet(x);
+                    retainIndex = i;
+                }
+            }, 1000);
+        }
+
+
+        var timeline = function(twittler1, twittler2, twittler3) {
+            if (individual == false) {
+                $(twittler1).remove();
+                $(twittler2).remove();
+                $(twittler3).remove();
+                clearInterval(newTweetsInterval);
+                var $button = $("<div class='back'></div>");
+                $button.html("Return to All Tweets");
+                $button.appendTo($tweets);
+                individual = true;
+            }
+        }
+
+
+        $(document).ready(function() {
+
+            originalTweets();
+            newTweets();
+
+        }).on('click', ".shawndrost", function() {
+
+            timeline(".div-sharksforcheap", ".div-mracus", ".div-douglascalhoun");
+
+        }).on('click', ".sharksforcheap", function() {
+
+            timeline(".div-shawndrost", ".div-mracus", ".div-douglascalhoun");
+
+        }).on('click', ".mracus", function() {
+
+            timeline(".div-sharksforcheap", ".div-shawndrost", ".div-douglascalhoun");
+
+        }).on('click', ".douglascalhoun", function() {
+
+            timeline(".div-sharksforcheap", ".div-mracus", ".div-shawndrost");
+
+        }).on('click', ".back", function() {
+            $("div").remove();
+            individual = false;
+            originalTweets();
+            newTweets();
+        });
+        </script>
+    </div>
 </body>
 
 </html>
